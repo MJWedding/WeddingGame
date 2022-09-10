@@ -1,0 +1,187 @@
+<html>
+<head>
+
+</head>
+
+
+<style>
+
+.answer{
+	background-color:#ddd;
+	width: 400px;
+	margin: auto;
+	padding: 10px;
+	margin-bottom:5px;
+	font-size: 16px;
+}
+
+.question{
+width:750px; padding-bottom: 20px;text-align:center; margin:auto; background-color:#eee; font-size:24px;
+}
+
+.red{
+	background-color:#ffaaaa;
+}
+.gray{
+	background-color:#ccc;
+}
+</style>
+
+
+<body style="width:100%; height:100%; overflow-x: hidden; overflow-y: hidden;">
+
+<div style="text-align:center; margin:auto; background-color:#eee; width:100%; min-height: 360px;">
+	<br>
+	<div class="question" style="visibility:hidden; position:absolute; height:0px;"></div>
+	<div class="question" style="visibility:hidden; position:absolute; height:0px;"></div>
+	<div class="question" style="visibility:hidden; position:absolute; height:0px;"></div>
+	<div class="question" style="visibility:hidden; position:absolute; height:0px;"></div>
+	<div class="question" style="visibility:hidden; position:absolute; height:0px;"></div>
+	<div class="question" style="visibility:hidden; position:absolute; height:0px;"></div>
+	<div class="question" style="visibility:hidden; position:absolute; height:0px;"></div>
+	<div class="question" style="visibility:hidden; position:absolute; height:0px;"></div>
+	<div class="question" style="visibility:hidden; position:absolute; height:0px;"></div>
+	<div class="question" style="visibility:hidden; position:absolute; height:0px;"></div>	
+	<div class="question" style="visibility:hidden; position:absolute; height:0px;"></div>
+</div>
+<br>
+<div id="timer" class="gray" style="width:300px; padding:30px; margin:auto; text-align:center; font-size:70px;" onclick="next();">
+	60
+</div>
+<br>
+
+<div style="width:400px; padding:20px; background-color:#ccc; margin:auto; text-align:center; cursor:pointer;" onclick="reveal();">
+	REVEAL
+</div>
+<br>
+<div style="width:400px; padding:20px; background-color:#ccc; margin:auto; text-align:center; cursor:pointer;" onclick="next();">
+	NEXT
+</div>
+<br>
+
+
+</body>
+<script>
+
+	var timer = document.getElementById("timer");
+	var maxTime = 60;
+	var time = maxTime;
+	
+
+	var allSolutions = `
+Trustworthy, patient, humble, adventurous, kind----
+Money, Food, Gift cards----
+Oysters, Ribs, spaghetti, fish----
+Kiss, hold hands, take pictures, be in love, smile, cheer----
+Mosquitoes, rain, dancing, lots of people, wedding party----
+Maui, Belize, Parents' basement, Back of the truck----
+Massage, spend time, cook dinner, kiss, buy gifts----
+Natural lighting, open concept, near water, near mountains, fireplace, not in city----
+Shark, Centipede, Boar, Cane Spidar, cockroach----
+Haleakala w/lunar eclipse, surfing, hiking, snorkelling, mountain biking, candlelight picnic----
+Seriously that is all, I wasn't joking please go, ok now I'm starting to get upset, seriously just exit the program, :'(
+	`
+var allQuestions = 
+	`1. NAME A QUALITY THAT IS IMPORTANT IN A FRIEND AND EVEN MORE IMPORTANT IN A SPOUSE----
+    2. NAME A WEDDING GIFT A BRIDE AND GROOM CAN NEVER HAVE TOO MUCH OF----
+    3. NAME A FOOD THAT SHOULD NOT BE SERVED AT A WEDDING----
+    4. NAME SOMETHING THAT A COUPLE DOES AT A WEDDING CEREMONY----
+    5. NAME SOMETHING MARISSA AND JASON DID NOT WANT AT THEIR WEDDING----
+    6. NAME A PLACE MARISSA AND JASON HAVE LIVED OR WILL BE LIVING----
+    7. NAME SOMETHING A SPOUSE MIGHT DO TO SHOW THEIR LOVE----
+    8. NAME THE TOP PREREQUISITES FOR JASON AND MARISSA’S FUTURE HOME----
+    9. NAME AN ANIMAL THAT JASON AND MARISSA WANT TO AVOID IN MAUI----
+    10. WHAT WOULD BE JASON AND MARISSA’S IDEAL DATE NIGHT----That is all. goodbye :(
+`
+
+var revealNum = 0;
+
+	var current = 0;
+	function reveal(){
+		
+		var questions = document.getElementsByClassName("question");
+		
+		var currentq = questions[current];
+		
+		console.log(currentq);
+		
+		var sols = currentq.querySelectorAll('.answer')
+	
+		sols[revealNum].innerHTML = sols[revealNum].getAttribute("sol");
+
+		revealNum += 1;
+	
+		return;
+		
+		
+		sols = document.getElementsByClassName("answer");
+		
+		for (var i = 0; i < sols.length; i++){
+			var sol = sols[i];
+			sol.innerHTML = sol.getAttribute("sol");
+		}
+	}
+	
+	function unreveal(){
+		sols = document.getElementsByClassName("answer");
+		for (var i = 0; i < sols.length; i++){
+			var sol = sols[i];
+			sol.innerHTML = "?"
+		}
+	}
+	
+
+	function next(){
+	revealNum = 0;
+		var questions = document.getElementsByClassName("question");
+		questions[current].style = "visibility:hidden; position:absolute; height:0px;"
+		current += 1;
+		questions[current].style = "";
+		unreveal();
+		time = maxTime;
+	}
+	
+	function parseSolutions(){
+		var lines = allSolutions.split("----");
+		
+		var allHTML = document.getElementsByClassName("question");
+		
+		var allQuestion = allQuestions.split("----");
+		
+		for (var i = 0; i < lines.length; i++){
+			var sols = lines[i].split(",");
+			var html = allQuestion[i] + "<br><br>";
+			for (var x = 0; x < sols.length; x++){
+				html += '<div class="answer" sol="' + sols[x] + '">?</div>'
+			}
+			allHTML[i].innerHTML = html;
+			console.log(allHTML[i]);
+		}
+		
+		var questions = document.getElementsByClassName("question");
+		questions[0].style = "";
+		
+	}
+	
+	
+window.addEventListener('load', (event) => {
+	setInterval( function(){
+		
+		timer.innerHTML = time;
+		time -= 1
+		if (time < 0){
+			time = 0;
+			timer.classList.add("red");
+			timer.classList.remove("gray");
+		}else{
+			timer.classList.remove("red");
+			timer.classList.add("gray");
+		}
+	}, 1000 );
+	parseSolutions();
+});
+	
+	
+</script>
+
+</html>
